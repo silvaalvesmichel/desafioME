@@ -67,7 +67,7 @@ public class DesafioMERestService {
 	}
 
 	@RequestMapping(value = "/pedido", method = RequestMethod.DELETE)
-	public ResponseEntity<Void> delete(@RequestBody Pedido pedido) {
+	public ResponseEntity<Void> deletarPedido(@RequestBody Pedido pedido) {
 		service.delete(pedido.getPedido(), pedido.getItens());
 		return ResponseEntity.accepted().build();
 	}

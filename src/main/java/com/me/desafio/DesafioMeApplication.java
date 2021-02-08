@@ -2,20 +2,25 @@ package com.me.desafio;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.EnableAsync;
 
 import com.me.desafio.domain.Item;
 import com.me.desafio.domain.Pedido;
-import com.me.desafio.enuns.StatusEnum;
 import com.me.desafio.repositories.ItemRepository;
 import com.me.desafio.repositories.PedidoRepository;
 
+import lombok.extern.slf4j.Slf4j;
+
+@EnableAsync
 @SpringBootApplication
+@Slf4j
+@EnableAutoConfiguration
 public class DesafioMeApplication implements CommandLineRunner{
 	
 	//automaticamente instanciado pelo spring
