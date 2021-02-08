@@ -14,3 +14,6 @@ Opcional: Utilizar IDE: STS - Spring Tool Suit (Eclipse / Maven / Tomcat / Jacks
 2. Postman: https://www.postman.com/downloads/ -> para testar endPoints
 
 3. Adicionei o arquivo(DesafioME.postman_collection) no projeto, aonde contem todas as chamadas dos serviços rest.
+
+4. Para executar todos os testes do projeto, acessar o arquivo: com.me.desafio.DesafioMeApplicationTests -> Botão direito -> Run As -> JUnit Test
+	obs: Em Run Configurations na opção Test runner selecionar "JUnit 4"
