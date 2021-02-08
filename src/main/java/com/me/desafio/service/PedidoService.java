@@ -26,7 +26,6 @@ public class PedidoService {
 
 	private PedidoRepository repo;
 	private ItemRepository itemRepo;
-	
 
 	public Pedido find(Integer pedido) {
 		// objeto container que vai carregar o tipo Pedido
@@ -68,22 +67,20 @@ public class PedidoService {
 		itemRepo.saveAll(obj.getItens());
 	}
 
-	public void delete(Integer id, List<Item> itens) {
-		find(id);
+	public void delete(Integer id) {
+		Pedido pedido = find(id);
+
 		try {
-			itemRepo.deleteAll(itens);
-			repo.deleteById(id);
+			itemRepo.deleteAll(pedido.getItens());
+			repo.deleteById(pedido.getPedido());
 		} catch (DataIntegrityViolationException e) {
 			throw new DataIntegrityException(Constantes.NAO_E_POSSIVEL_EXCLUIR_UM_PEDIDO_QUE_POSSUI_ITENS);
 		}
 	}
 
 	public PedidoStatusRespostaDTO obterStatus(PedidoStatusDTO pedidoStatus) {
-		Optional<Pedido> obj = repo.findById(pedidoStatus.getPedido());
-		Pedido pedido = obj.orElse(null);
-		if (pedido == null) {
-			throw new ObjectNotFoundException(Constantes.STATUS_CODIGO_PEDIDO_INVALIDO);
-		}
+		Pedido pedido = repo.findById(pedidoStatus.getPedido())
+				.orElseThrow(() -> new ObjectNotFoundException(Constantes.STATUS_CODIGO_PEDIDO_INVALIDO));
 
 		Integer quantidadeItensPedido = 0;
 		Double valorPedido = Double.valueOf(0);
@@ -150,7 +147,5 @@ public class PedidoService {
 	public void setItemRepository(ItemRepository repo) {
 		this.itemRepo = repo;
 	}
-
-	
 
 }

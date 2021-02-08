@@ -117,7 +117,7 @@ public class PedidoServiceTest {
 		when(pedidoRepo.findById(1)).thenReturn(montarPedidoRetorno());
 		doNothing().when(pedidoRepo).delete(any(Pedido.class));
 		doNothing().when(itemRepo).delete(any(Item.class));
-		service.delete(pedidoretorno.getPedido(), pedidoretorno.getItens());
+		service.delete(pedidoretorno.getPedido());
 		verify(pedidoRepo, times(1)).deleteById(anyInt());
 		verify(itemRepo, times(1)).deleteAll(Matchers.anyListOf((Item.class)));
 	}
@@ -128,7 +128,7 @@ public class PedidoServiceTest {
 		pedidoretorno.setItens(null);
 		when(pedidoRepo.findById(1)).thenReturn(montarPedidoRetorno());
 		try {
-			service.delete(pedidoretorno.getPedido(), null);
+			service.delete(pedidoretorno.getPedido());
 		} catch (DataIntegrityViolationException e) {
 			assertEquals(Constantes.NAO_E_POSSIVEL_EXCLUIR_UM_PEDIDO_QUE_POSSUI_ITENS, e.getMessage());
 		}
