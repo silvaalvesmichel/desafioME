@@ -63,16 +63,6 @@ public class DesafioMERestServiceTest {
 		ObjectMapper objectMapper = new ObjectMapper();
 		JacksonTester.initFields(this, objectMapper);
 
-		/*
-		 * Pedido pedido = new Pedido(null, null); pedidoRepo.save(pedido); List<Item>
-		 * itens = new ArrayList<Item>(); Item item1 = new Item("Item A",
-		 * Double.valueOf("10"), 1, pedido); Item item2 = new Item("Item B",
-		 * Double.valueOf("5"), 2, pedido); Item item3 = new Item("Item C",
-		 * Double.valueOf("25"), 3, pedido); itens.add(item1); itens.add(item2);
-		 * itens.add(item3);
-		 * 
-		 * pedido.setItens(itens); pedidoRepo.save(pedido); itemRepo.saveAll(itens);
-		 */
 	}
 
 	@Test
