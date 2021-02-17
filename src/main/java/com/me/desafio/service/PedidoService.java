@@ -1,6 +1,7 @@
 package com.me.desafio.service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,6 +15,14 @@ import com.me.desafio.dto.PedidoStatusRespostaDTO;
 import com.me.desafio.enuns.StatusEnum;
 import com.me.desafio.repositories.ItemRepository;
 import com.me.desafio.repositories.PedidoRepository;
+import com.me.desafio.rule.RegraStatus;
+import com.me.desafio.rule.RegraStatusAprovado;
+import com.me.desafio.rule.RegraStatusAprovadoQtdMaior;
+import com.me.desafio.rule.RegraStatusAprovadoQtdMenor;
+import com.me.desafio.rule.RegraStatusAprovadoValorMaior;
+import com.me.desafio.rule.RegraStatusAprovadoValorMenor;
+import com.me.desafio.rule.RegraStatusReprovado;
+import com.me.desafio.rule.Status;
 import com.me.desafio.service.exception.DataIntegrityException;
 import com.me.desafio.service.exception.ObjectNotFoundException;
 import com.me.desafio.util.Constantes;
@@ -84,60 +93,32 @@ public class PedidoService {
 
 		Integer quantidadeItensPedido = 0;
 		Double valorPedido = Double.valueOf(0);
-		List<String> status = new ArrayList<String>();
-		PedidoStatusRespostaDTO retorno = new PedidoStatusRespostaDTO(null, pedido.getPedido());
 
 		for (Item item : pedido.getItens()) {
 			valorPedido = valorPedido + (item.getPrecoUnitario() * item.getQtd());
 			quantidadeItensPedido = quantidadeItensPedido + item.getQtd();
 		}
 
-		// verificando se o status é igual a reprovado
-		if (pedidoStatus.getStatus().equals(StatusEnum.REPROVADO.getStatus())) {
-			status.add(StatusEnum.REPROVADO.getStatus());
-			retorno.setStatus(status);
-			return retorno;
-		}
+		RegraStatusAprovado regraAprovado = new RegraStatusAprovado(pedidoStatus, valorPedido, quantidadeItensPedido,
+				pedido.getPedido());
+		RegraStatusReprovado regraReprovado = new RegraStatusReprovado(pedidoStatus, valorPedido, quantidadeItensPedido,
+				pedido.getPedido());
+		RegraStatusAprovadoQtdMaior regraAprovadoQtdMaior = new RegraStatusAprovadoQtdMaior(pedidoStatus, valorPedido,
+				quantidadeItensPedido, pedido.getPedido());
+		RegraStatusAprovadoQtdMenor regraAprovadoQtdMenor = new RegraStatusAprovadoQtdMenor(pedidoStatus, valorPedido,
+				quantidadeItensPedido, pedido.getPedido());
+		RegraStatusAprovadoValorMaior regraAprovadoValorMaior = new RegraStatusAprovadoValorMaior(pedidoStatus,
+				valorPedido, quantidadeItensPedido, pedido.getPedido());
+		RegraStatusAprovadoValorMenor regraAprovadoValorMenor = new RegraStatusAprovadoValorMenor(pedidoStatus,
+				valorPedido, quantidadeItensPedido, pedido.getPedido());
+		
+		List<RegraStatus> regras = Arrays.asList(regraAprovado, regraReprovado, regraAprovadoQtdMaior,
+				regraAprovadoQtdMenor, regraAprovadoValorMaior, regraAprovadoValorMenor);
 
-		else if (pedidoStatus.getItensAprovados() == quantidadeItensPedido
-				&& pedidoStatus.getValorAprovado().equals(valorPedido) && isStatusAprovado(pedidoStatus)) {
+		Status statusRetorno = new Status(regras);
 
-			status.add(StatusEnum.APROVADO.getStatus());
-			retorno.setStatus(status);
-			return retorno;
-		}
+		return statusRetorno.getStatus();
 
-		else if (pedidoStatus.getValorAprovado() < valorPedido && isStatusAprovado(pedidoStatus)) {
-			status.add(StatusEnum.APROVADO_VALOR_A_MENOR.getStatus());
-			retorno.setStatus(status);
-			return retorno;
-		}
-
-		else if (pedidoStatus.getItensAprovados() < quantidadeItensPedido && isStatusAprovado(pedidoStatus)) {
-			status.add(StatusEnum.APROVADO_QTD_A_MENOR.getStatus());
-			retorno.setStatus(status);
-			return retorno;
-		}
-
-		else if (pedidoStatus.getValorAprovado() > valorPedido && isStatusAprovado(pedidoStatus)) {
-			status.add(StatusEnum.APROVADO_VALOR_A_MAIOR.getStatus());
-			retorno.setStatus(status);
-			return retorno;
-		}
-
-		else if (pedidoStatus.getItensAprovados() > quantidadeItensPedido && isStatusAprovado(pedidoStatus)) {
-			status.add(StatusEnum.APROVADO_QTD_A_MAIOR.getStatus());
-			retorno.setStatus(status);
-			return retorno;
-		}
-
-		else {
-			return retorno;
-		}
-	}
-
-	private boolean isStatusAprovado(PedidoStatusDTO pedido) {
-		return pedido.getStatus().equals(StatusEnum.APROVADO.getStatus());
 	}
 
 	public void setPedidoRepository(PedidoRepository repo) {
