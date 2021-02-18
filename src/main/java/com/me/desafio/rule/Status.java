@@ -23,11 +23,11 @@ public class Status {
 	public PedidoStatusRespostaDTO getStatus() {
 		for (RegraStatus regra : regras) {
 			PedidoStatusRespostaDTO retorno = regra.getStatus();
-			if (!retorno.getStatus().isEmpty()) {
+			if (retorno.getStatus() != null) {
 				return retorno;
 			}
 		}
-		return null;
+		return new PedidoStatusRespostaDTO();
 	}
 
 }

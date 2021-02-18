@@ -129,8 +129,4 @@ public class DesafioMERestServiceTest {
 		return pedido;
 	}
 
-	private Optional<Pedido> montarPedidoRetorno() {
-		Pedido pedido = montarPedido();
-		return Optional.ofNullable(pedido);
-	}
 }
